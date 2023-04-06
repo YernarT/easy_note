@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'store/getx/note_controller.dart';
 
 import 'routes.dart' show routes;
 
 void main() {
-  runApp(const App());
+  runApp(App());
 }
 
 class App extends StatelessWidget {
-  const App({super.key});
+  final NoteController noteController = Get.put(NoteController());
+
+  App({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,34 @@
 import 'package:flutter/material.dart';
 
+// Store
 import 'package:get/get.dart';
+import 'package:easy_note/store/getx/note_controller.dart';
 
 class DetailHeader extends StatelessWidget {
-  const DetailHeader({super.key});
+  final NoteController noteController = Get.find();
+  final Function onSave;
+
+  DetailHeader({super.key, required this.onSave});
+
+  void handleCopy() {
+    Get.snackbar('Хабарландыру', 'Көшіру функциясы әзірленбеген');
+  }
+
+  void handleSave(BuildContext context) {
+    FocusScope.of(context).unfocus();
+    noteController.isEditing.value = false;
+    onSave();
+  }
+
+  void hanldeBack(BuildContext context) {
+    if (noteController.isEditing.value) {
+      FocusScope.of(context).unfocus();
+      noteController.isEditing.value = false;
+      handleSave(context);
+    }
+
+    Get.back();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +42,20 @@ class DetailHeader extends StatelessWidget {
           children: [
             IconButton(
                 iconSize: 36,
-                onPressed: () => Get.back(),
+                onPressed: () => hanldeBack(context),
                 icon: const Icon(Icons.arrow_back)),
             IconButton(
                 iconSize: 36,
-                onPressed: () {},
-                icon: const Icon(Icons.copy_all))
+                onPressed: () {
+                  if (noteController.isEditing.value) {
+                    handleSave(context);
+                  } else {
+                    handleCopy();
+                  }
+                },
+                icon: Obx(() => noteController.isEditing.value
+                    ? const Icon(Icons.done)
+                    : const Icon(Icons.copy_all)))
           ],
         ));
   }
